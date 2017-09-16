@@ -1,0 +1,13 @@
+[mysqld]
+datadir=/jet/var/mysqld/data
+plugin_dir=/jet/var/mysqld/plugin
+socket=/jet/run/mysqld/mysql.sock
+# Disabling symbolic-links is recommended to prevent assorted security risks
+#skip-networking
+symbolic-links=0
+sql-mode=''
+character-set-server=utf8
+tmpdir=/tmp
+[mysqld_safe]
+log-error=/jet/log/mysqld/mysqld.log
+pid-file=/jet/run/mysqld/mysqld.pid
