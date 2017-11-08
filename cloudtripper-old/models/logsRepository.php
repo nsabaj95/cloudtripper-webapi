@@ -91,6 +91,20 @@ class logsRepository implements iRepository
         }
 
     }
+    private function compressImage($image){
+        var_dump($image);
+        $incoming_file = $image;
+        $img = new Imagick();
+        $img->readImageBlob($image);
+        $profiles = $img->getImageProfiles("icc", true);
+        $img->stripImage();
+        if(!empty($profiles)) {
+            $img->profileImage("icc", $profiles['icc']);
+        }
+        $newImage = $img->getImageBlob();
+        var_dump($newImage);
+        return $newImage;
+    }
     private function create($logData)
     {
         $title = $logData["title"];

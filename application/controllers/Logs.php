@@ -46,7 +46,7 @@ class Logs extends REST_Controller
     {
         $p = HttpHelper::getParametersArray(true);
         $image = array_key_exists('image', $p) && $p['image'] != null ? addslashes($p['image']) : "";
-        $data = $this->logs_model->post_log($p['title'], $p['message'], $p['positionEnabled'], $p['latitude'], $p['longitude'], $p['date'], $image, $p['trip_id']);
+        $data = $this->logs_model->post_log($p['title'], $p['message'], $p['positionEnabled'], $p['latitude'], $p['longitude'], $p['date'], $image, $p['trip_id'], $p['address']);
         $this->response(JsonResponse::getResponse($data, true, "New log added"));
     }
     // public function index_put()

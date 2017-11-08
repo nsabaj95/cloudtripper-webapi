@@ -21,7 +21,8 @@ class Logs_model extends CI_Model {
             Logs.longitude, 
             Logs.date, 
             Logs.image, 
-            Logs.trip_Id, 
+            Logs.trip_Id,
+            Logs.address, 
             Trips.destination, 
             Users.username,
             Users.name');
@@ -69,7 +70,7 @@ class Logs_model extends CI_Model {
         // print_r($this->db->last_query());
         return $result;
     }
-    public function post_log($title, $message, $locationEnabled, $latitude, $longitude, $date, $image, $trip_id){
+    public function post_log($title, $message, $locationEnabled, $latitude, $longitude, $date, $image, $trip_id, $address){
         $data = array(
         'title' => $title,
         'message' => $message,
@@ -78,7 +79,8 @@ class Logs_model extends CI_Model {
         'longitude' => $longitude,
         'date' => $date,
         'image' => $image,
-        'trip_id' => $trip_id
+        'trip_id' => $trip_id,
+        'address' => $address
         );
 
         $this->db->insert(self::$table, $data);
@@ -99,5 +101,4 @@ class Logs_model extends CI_Model {
         $trip->numberOfLogs = $trip->numberOfLogs + 1;
         $trips_model->put_trip($trip_id, $trip);
     }
-    
 }
