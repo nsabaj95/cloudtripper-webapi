@@ -12,19 +12,20 @@ class Logs_model extends CI_Model {
         $this->load->database();
     }
 
-    private function getQuery($skip, $take){
+    private function getQuery($skip, $take, $require_pictures = true){
         $this->db->select('Logs.id, 
             Logs.title, 
             Logs.message, 
             Logs.locationEnabled, 
             Logs.latitude, 
             Logs.longitude, 
-            Logs.date, 
-            Logs.image, 
-            Logs.trip_Id,
+            Logs.date,'
+            . ($require_pictures ? 'Logs.image,' : '') .
+            'Logs.trip_Id,
             Logs.address, 
             Trips.destination, 
             Users.username,
+            Users.facebookid,
             Users.name');
         // $this->db->from(self::$table);
         $this->db->order_by("Logs.date", "desc");
@@ -62,10 +63,10 @@ class Logs_model extends CI_Model {
 
         return $query->result();
     }
-    public function get_logsByTripId($trip_id, $skip, $take)
+    public function get_logsByTripId($trip_id, $skip, $take, $require_pictures)
     {
         $this->db->where('trip_id', $trip_id);
-        $query = $this->getQuery($skip, $take);
+        $query = $this->getQuery($skip, $take, $require_pictures);
         $result = $query->result();
         // print_r($this->db->last_query());
         return $result;

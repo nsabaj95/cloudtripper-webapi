@@ -4,20 +4,21 @@ require_once 'Users_model.php';
 class Trips_model extends CI_Model {
     
     public static $table = "Trips";
-
+    
     public function __construct()
     {
         parent::__construct();
         $this->load->database();
     }
-
+    
     private function getQuery($skip, $take){
         $this->db->select('Trips.*,
-            Users.username');
+        Users.username,
+        Users.name');
         $this->db->join(Users_model::$table, self::$table. '.user_id = ' . Users_model::$table . '.id');
-
+        
         if($skip != null && $take != null){
-            $this->db->order_by('startDate', 'DESC');     
+            $this->db->order_by('startDate', 'DESC');
             $query = $this->db->get(self::$table, $take, $skip);
         }else{
             $query = $this->db->get(self::$table);
@@ -44,7 +45,8 @@ class Trips_model extends CI_Model {
     }
     public function get_tripsByUserId($user_id, $skip, $take)
     {
-        $this->db->where('User_Id', $user_id);
+        $where = "Trips.user_id = " . $user_id . " || Trips.id IN (SELECT u.trip_id FROM UsersByTrip u WHERE u.user_id = " . $user_id . ")";
+        $this->db->where($where);
         $query = $this->getQuery($skip, $take);
         return $query->result();
     }
@@ -62,6 +64,22 @@ class Trips_model extends CI_Model {
         $this->db->insert(self::$table, $data);
         return $this->db->insert_id();
     }
+    public function post_userByTrip($user_id, $trip_id){
+        $data = array(
+        'user_id' => $user_id,
+        'trip_id' => $trip_id,
+        );
+        
+        $this->db->insert('UsersByTrip', $data);
+        return $this->db->insert_id();
+    }
+    public function get_usersByTrip($trip_id){
+        
+        $this->db->select('Users.username, Users.id, Users.avatar, Users.name');
+        $this->db->join('UsersByTrip', 'Users.id = UsersByTrip.user_id AND UsersByTrip.trip_id=' . $trip_id);
+        $query = $this->db->get('Users');
+        return $query->result();
+    }
     public function delete_trip($id){
         $this->db->delete(self::$table, array('id' => $id));
     }
@@ -69,7 +87,7 @@ class Trips_model extends CI_Model {
         // $data = array(
         // 'lastupdate' => $lastupdate,
         // );
-
+        
         $this->db->where('id', $id);
         $this->db->update(self::$table, $data);
     }

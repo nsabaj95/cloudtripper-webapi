@@ -17,6 +17,10 @@ class Logs extends REST_Controller
     {
         $skip = $this->get('skip');
         $take = $this->get('take');
+        
+        $_require_pictures = $this->get('require_pictures');
+        $require_pictures = $_require_pictures === 'true'? true: false;
+        
         $subscriptor_id = $this->get('subscriptor_id');
         $updateDate = $this->get('updateDate');
         $trip_id = $this->get('trip_id');
@@ -30,7 +34,7 @@ class Logs extends REST_Controller
             $data = $this->logs_model->get_news($subscriptor_id, $skip, $take, $updateDate);
         }
         else if($trip_id != null){
-            $data = $this->logs_model->get_logsByTripId($trip_id, $skip, $take);
+            $data = $this->logs_model->get_logsByTripId($trip_id, $skip, $take, $require_pictures);
         }
         else if($id != null){
             $data = $this->logs_model->get_logById($id);
